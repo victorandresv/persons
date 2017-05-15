@@ -79,7 +79,7 @@ public class AdapterPersons extends BaseAdapter {
                 intent.putExtra("phone_number", phone_number.getText().toString());
                 intent.putExtra("date_of_birth", date_of_birth.getText().toString());
                 intent.putExtra("zipcode", zipcode.getText().toString());
-                context.startActivity(intent);
+                context.startActivity(intent); //TODO: Cambiar por result
             }
         });
 

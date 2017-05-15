@@ -13,10 +13,10 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:padding="16dp"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:padding="10dp"
                 android:hint="@string/first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
@@ -31,7 +31,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:padding="10dp"
                 android:hint="@string/last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
@@ -46,7 +45,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:padding="10dp"
                 android:hint="@string/phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
@@ -61,7 +59,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:padding="10dp"
                 android:id="@+id/texto_input_layout"
                 android:layout_width="match_parent"
                 android:hint="@string/date_of_birth"
@@ -72,12 +69,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="date"
+                    android:focusable="false"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:padding="10dp"
                 android:hint="@string/zipcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
@@ -92,6 +89,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
+                android:id="@+id/save"
                 android:layout_gravity="right"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:text="@string/save"
