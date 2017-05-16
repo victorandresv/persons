@@ -1,5 +1,6 @@
 package com.victorvargascodetest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -79,7 +80,7 @@ public class AdapterPersons extends BaseAdapter {
                 intent.putExtra("phone_number", phone_number.getText().toString());
                 intent.putExtra("date_of_birth", date_of_birth.getText().toString());
                 intent.putExtra("zipcode", zipcode.getText().toString());
-                context.startActivity(intent); //TODO: Cambiar por result
+                ((Activity) context).startActivityForResult(intent, 1);
             }
         });
 
