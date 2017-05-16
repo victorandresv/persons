@@ -148,16 +148,7 @@ public class EditPerson extends AppCompatActivity {
                     //SEARCH FOR FIRST NAME AND LAST NAME, IF EXIST UPDATE ELSE CREATE NEW
                     if(FIRST_NAME != null && LAST_NAME != null){
                         if(!FIRST_NAME.isEmpty() && !LAST_NAME.isEmpty()) {
-                            Cursor cursor = database.getAll();
-                            if (cursor.getCount() > 0) {
-                                while (cursor.moveToNext()) {
-
-                                }
-                                insertToDatabase();
-                            } else {
-                                insertToDatabase();
-                            }
-                            cursor.close();
+                            updateToDatabase();
                         } else {
                             insertToDatabase();
                         }
