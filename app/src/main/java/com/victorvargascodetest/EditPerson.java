@@ -3,9 +3,11 @@ package com.victorvargascodetest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -170,8 +172,8 @@ public class EditPerson extends AppCompatActivity {
 
     private void updateToDatabase(){
         ContentValues values = new ContentValues();
-        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString());
-        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString());
+        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString().toUpperCase());
+        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString().toUpperCase());
         values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.getText().toString());
         values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.getText().toString());
         values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.getText().toString());
@@ -186,17 +188,40 @@ public class EditPerson extends AppCompatActivity {
      * INSERT NEW PERSON TO DATABASE
      */
     private void insertToDatabase(){
-        ContentValues values = new ContentValues();
-        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString());
-        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString());
-        values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.getText().toString());
-        values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.getText().toString());
-        values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.getText().toString());
-        database.insert(values);
+        if(!checkIfPersonExist(first_name.getText().toString(), last_name.getText().toString())){
+            ContentValues values = new ContentValues();
+            values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString().toUpperCase());
+            values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString().toUpperCase());
+            values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.getText().toString());
+            values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.getText().toString());
+            values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.getText().toString());
+            database.insert(values);
 
-        Intent intent = new Intent();
-        setResult(1, intent);
-        finish();
+            Intent intent = new Intent();
+            setResult(1, intent);
+            finish();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Error");
+            alert.setMessage(getResources().getString(R.string.person_exist));
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.create();
+            alert.show();
+        }
+    }
+
+    private boolean checkIfPersonExist(String fn, String ln){
+        boolean exist = false;
+        Cursor cursor = database.getByFirstNameAndLastName(fn.toUpperCase(), ln.toUpperCase());
+        if(cursor.getCount() > 0){
+            exist = true;
+        }
+        cursor.close();
+        return exist;
     }
 
     @Override

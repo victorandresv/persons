@@ -44,8 +44,6 @@ public class DbPersonsHelper  extends SQLiteOpenHelper {
     }
 
     public void delete(String first_name, String last_name){
-        Log.d("FIRST_NAME", first_name);
-        Log.d("LAST_NAME", last_name);
         SQLiteDatabase db = getReadableDatabase();
         String where = DbPersonsDefinition.Entry.FIRST_NAME + " = ? AND "+ DbPersonsDefinition.Entry.LAST_NAME + " = ?";
         db.delete(DbPersonsDefinition.Entry.TABLE_NAME, where, new String[]{first_name, last_name});
@@ -62,6 +60,21 @@ public class DbPersonsHelper  extends SQLiteOpenHelper {
                 DbPersonsDefinition.Entry.ZIPCODE
         };
         Cursor cursor = db.query(DbPersonsDefinition.Entry.TABLE_NAME, projection, null, null, null, null, null);
+        return cursor;
+    }
+
+    public Cursor getByFirstNameAndLastName(String fn, String ln){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                DbPersonsDefinition.Entry.ID,
+                DbPersonsDefinition.Entry.FIRST_NAME,
+                DbPersonsDefinition.Entry.LAST_NAME,
+                DbPersonsDefinition.Entry.PHONE_NUMBER,
+                DbPersonsDefinition.Entry.DATE_OF_BIRTH,
+                DbPersonsDefinition.Entry.ZIPCODE
+        };
+        String where = DbPersonsDefinition.Entry.FIRST_NAME + " = ? AND "+ DbPersonsDefinition.Entry.LAST_NAME + " = ?";
+        Cursor cursor = db.query(DbPersonsDefinition.Entry.TABLE_NAME, projection, where, new String[]{fn, ln}, null, null, null);
         return cursor;
     }
 
