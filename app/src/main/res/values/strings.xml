@@ -7,4 +7,7 @@
     <string name="zipcode">Zip Code</string>
     <string name="save">Save person</string>
     <string name="required">This Field is required</string>
+    <string name="new_person_title">New person</string>
+    <string name="new_person_text">Create new person</string>
+    <string name="edit_person_text">Edit person</string>
 </resources>

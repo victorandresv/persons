@@ -2,6 +2,9 @@ package com.victorvargascodetest;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,11 +25,19 @@ public class EditPerson extends AppCompatActivity {
     EditText date_of_birth;
     EditText zipcode;
 
+    String FIRST_NAME;
+    String LAST_NAME;
+    String PHONE_NUMBER;
+    String DATE_OF_BIRTH;
+    String ZIPCODE;
+
     Button button_date_of_birth;
 
     DatePickerDialog picker;
 
     Activity activity;
+
+    DbPersonsHelper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +58,18 @@ public class EditPerson extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_right);
 
         this.setTitle(getIntent().getStringExtra("first_name")+" "+getIntent().getStringExtra("last_name"));
-        getSupportActionBar().setSubtitle("Edit person");
+        getSupportActionBar().setSubtitle(getResources().getString(R.string.edit_person_text));
 
         activity = this;
+
+
+        //VALUES FROM INTENT
+        FIRST_NAME = getIntent().getStringExtra("first_name");
+        LAST_NAME = getIntent().getStringExtra("last_name");
+        PHONE_NUMBER = getIntent().getStringExtra("phone_number");
+        DATE_OF_BIRTH = getIntent().getStringExtra("date_of_birth");
+        ZIPCODE = getIntent().getStringExtra("zipcode");
+
 
         //EDIT TEXT INITIALIZATION
         first_name = (EditText) findViewById(R.id.first_name);
@@ -58,6 +78,7 @@ public class EditPerson extends AppCompatActivity {
         date_of_birth = (EditText) findViewById(R.id.date_of_birth);
         zipcode = (EditText) findViewById(R.id.zipcode);
 
+        //BUTTON TO SELECT CALENDAR FOR DATE OF BIRTH
         button_date_of_birth = (Button) findViewById(R.id.button_date_of_birth);
         button_date_of_birth.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,30 +98,37 @@ public class EditPerson extends AppCompatActivity {
         });
 
 
-        //COMPLETE FIELDS IF DATA FOR EDIT EXIST
-        if(!getIntent().getStringExtra("first_name").isEmpty() && !getIntent().getStringExtra("last_name").isEmpty()){
-            first_name.setText(getIntent().getStringExtra("first_name"));
-            last_name.setText(getIntent().getStringExtra("last_name"));
-
-            try{
-                phone_number.setText(getIntent().getStringExtra("phone_number"));
-            } catch(Exception e){
-                Log.e("ERROR", "No phone number");
+        //COMPLETE FIELDS IF DATA EXIST
+        if(FIRST_NAME != null && LAST_NAME != null){
+            if(!FIRST_NAME.isEmpty() && !LAST_NAME.isEmpty()) {
+                first_name.setText(FIRST_NAME);
+                last_name.setText(LAST_NAME);
+                if (PHONE_NUMBER != null) {
+                    if (!PHONE_NUMBER.isEmpty()) {
+                        phone_number.setText(PHONE_NUMBER);
+                    }
+                }
+                if (DATE_OF_BIRTH != null) {
+                    if (!DATE_OF_BIRTH.isEmpty()) {
+                        date_of_birth.setText(DATE_OF_BIRTH);
+                    }
+                }
+                if (ZIPCODE != null) {
+                    if (!ZIPCODE.isEmpty()) {
+                        zipcode.setText(ZIPCODE);
+                    }
+                }
             }
-
-            try{
-                date_of_birth.setText(getIntent().getStringExtra("date_of_birth"));
-            } catch(Exception e){
-                Log.e("ERROR", "No date of birth");
-            }
-
-            try{
-                zipcode.setText(getIntent().getStringExtra("zipcode"));
-            } catch(Exception e){
-                Log.e("ERROR", "No zipcode");
-            }
+        } else {
+            this.setTitle(getResources().getString(R.string.new_person_title));
+            getSupportActionBar().setSubtitle(getResources().getString(R.string.new_person_text));
         }
 
+        //SQLITE DATABASE INITIALIZATION
+        database = new DbPersonsHelper(this);
+
+
+        //SAVE BUTTON FOR NEW OR UPDATE
         Button save = (Button) findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,24 +142,44 @@ public class EditPerson extends AppCompatActivity {
                     last_name.setError(getResources().getString(R.string.required));
                     add = false;
                 }
-                if(phone_number.length() == 0){
-                    phone_number.setError(getResources().getString(R.string.required));
-                    add = false;
-                }
-                if(date_of_birth.length() == 0){
-                    date_of_birth.setError(getResources().getString(R.string.required));
-                    add = false;
-                }
-                if(zipcode.length() == 0){
-                    zipcode.setError(getResources().getString(R.string.required));
-                    add = false;
-                }
                 if(add){
-                    //TODO: Agregar a la base de datos y regresar y refrescar
+                    //SEARCH FOR FIRST NAME AND LAST NAME, IF EXIST UPDATE ELSE CREATE NEW
+                    if(FIRST_NAME != null && LAST_NAME != null){
+                        if(!FIRST_NAME.isEmpty() && !LAST_NAME.isEmpty()) {
+                            Cursor cursor = database.getAll();
+                            if (cursor.getCount() > 0) {
+                                while (cursor.moveToNext()) {
+
+                                }
+                                insertToDatabase();
+                            } else {
+                                insertToDatabase();
+                            }
+                            cursor.close();
+                        } else {
+                            insertToDatabase();
+                        }
+                    } else {
+                        insertToDatabase();
+                    }
                 }
             }
         });
 
+    }
+
+    private void insertToDatabase(){
+        ContentValues values = new ContentValues();
+        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.toString());
+        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.toString());
+        values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.toString());
+        values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.toString());
+        values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.toString());
+        database.insert(values);
+
+        Intent intent = new Intent();
+        setResult(1, intent);
+        finish();
     }
 
     @Override
