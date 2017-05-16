@@ -100,6 +100,10 @@ public class AdapterPersons extends BaseAdapter {
                         DbPersonsHelper PersonsHelper = new DbPersonsHelper(context);
                         PersonsHelper.delete(Persons.get(position).getFirst_name(), Persons.get(position).getLast_name());
 
+                        Intent intent = new Intent(context, MainActivity.class);
+                        ((Activity) context).finish();
+                        ((Activity) context).startActivity(intent);
+
                         dialog.cancel();
                     }
                 });

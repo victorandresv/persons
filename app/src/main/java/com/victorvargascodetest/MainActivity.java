@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,10 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<ModelPersons> Persons = new ArrayList<ModelPersons>();
 
+        TextView no_persons_text = (TextView) findViewById(R.id.no_persons_text);
+
         //ADD PERSONS TO LIST IF EXIST ON DATABASE
         DbPersonsHelper PersonsHelper = new DbPersonsHelper(this);
         Cursor cursor = PersonsHelper.getAll();
         if(cursor.getCount() > 0){
+            no_persons_text.setVisibility(View.GONE);
             while(cursor.moveToNext()){
                 Persons.add(new ModelPersons(
                         cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.FIRST_NAME)),
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 ));
             }
         } else {
-
+            no_persons_text.setVisibility(View.VISIBLE);
         }
         cursor.close();
 

@@ -11,4 +11,5 @@
     <string name="new_person_text">Create new person</string>
     <string name="edit_person_text">Edit person</string>
     <string name="delete_question">Are you sure you want delete this person?</string>
+    <string name="no_list_text">There is not persons in the database. \nAdd one in the button on top right.</string>
 </resources>

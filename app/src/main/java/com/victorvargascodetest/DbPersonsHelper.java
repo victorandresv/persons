@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DbPersonsHelper  extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
@@ -43,6 +44,8 @@ public class DbPersonsHelper  extends SQLiteOpenHelper {
     }
 
     public void delete(String first_name, String last_name){
+        Log.d("FIRST_NAME", first_name);
+        Log.d("LAST_NAME", last_name);
         SQLiteDatabase db = getReadableDatabase();
         String where = DbPersonsDefinition.Entry.FIRST_NAME + " = ? AND "+ DbPersonsDefinition.Entry.LAST_NAME + " = ?";
         db.delete(DbPersonsDefinition.Entry.TABLE_NAME, where, new String[]{first_name, last_name});
