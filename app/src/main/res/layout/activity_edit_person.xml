@@ -74,6 +74,14 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <Button
+                android:drawableLeft="@drawable/calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select date"
+                android:id="@+id/button_date_of_birth"/>
+
+
             <android.support.design.widget.TextInputLayout
                 android:hint="@string/zipcode"
                 android:layout_width="match_parent"

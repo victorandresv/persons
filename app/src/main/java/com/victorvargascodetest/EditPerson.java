@@ -1,5 +1,6 @@
 package com.victorvargascodetest;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,11 @@ public class EditPerson extends AppCompatActivity {
     EditText date_of_birth;
     EditText zipcode;
 
+    Button button_date_of_birth;
+
     DatePickerDialog picker;
+
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,8 @@ public class EditPerson extends AppCompatActivity {
         this.setTitle(getIntent().getStringExtra("first_name")+" "+getIntent().getStringExtra("last_name"));
         getSupportActionBar().setSubtitle("Edit person");
 
+        activity = this;
+
         //EDIT TEXT INITIALIZATION
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);
@@ -51,19 +58,18 @@ public class EditPerson extends AppCompatActivity {
         date_of_birth = (EditText) findViewById(R.id.date_of_birth);
         zipcode = (EditText) findViewById(R.id.zipcode);
 
-
-        date_of_birth.setOnClickListener(new View.OnClickListener() {
+        button_date_of_birth = (Button) findViewById(R.id.button_date_of_birth);
+        button_date_of_birth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
-                //TODO Error al hacer click aqui
-                picker = new DatePickerDialog(getBaseContext(), new DatePickerDialog.OnDateSetListener() {
+                picker = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        date_of_birth.setText(String.format("%02d",day)+"-"+String.format("%02d",month+1)+"-"+String.format("%02d",year));
+                        date_of_birth.setText(String.format("%02d",year)+"-"+String.format("%02d",month+1)+"-"+String.format("%02d",day));
                     }
                 }, year, month, day);
                 picker.show();
