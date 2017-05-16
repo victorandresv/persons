@@ -168,13 +168,30 @@ public class EditPerson extends AppCompatActivity {
 
     }
 
+    private void updateToDatabase(){
+        ContentValues values = new ContentValues();
+        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString());
+        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString());
+        values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.getText().toString());
+        values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.getText().toString());
+        values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.getText().toString());
+        database.update(FIRST_NAME, LAST_NAME, values);
+
+        Intent intent = new Intent();
+        setResult(1, intent);
+        finish();
+    }
+
+    /**
+     * INSERT NEW PERSON TO DATABASE
+     */
     private void insertToDatabase(){
         ContentValues values = new ContentValues();
-        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.toString());
-        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.toString());
-        values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.toString());
-        values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.toString());
-        values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.toString());
+        values.put(DbPersonsDefinition.Entry.FIRST_NAME, first_name.getText().toString());
+        values.put(DbPersonsDefinition.Entry.LAST_NAME, last_name.getText().toString());
+        values.put(DbPersonsDefinition.Entry.PHONE_NUMBER, phone_number.getText().toString());
+        values.put(DbPersonsDefinition.Entry.DATE_OF_BIRTH, date_of_birth.getText().toString());
+        values.put(DbPersonsDefinition.Entry.ZIPCODE, zipcode.getText().toString());
         database.insert(values);
 
         Intent intent = new Intent();

@@ -2,7 +2,9 @@ package com.victorvargascodetest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +83,34 @@ public class AdapterPersons extends BaseAdapter {
                 intent.putExtra("date_of_birth", date_of_birth.getText().toString());
                 intent.putExtra("zipcode", zipcode.getText().toString());
                 ((Activity) context).startActivityForResult(intent, 1);
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //DIALOG TO ASK IF ARE YOU SURE TO DELETE THE PERSON
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Delete "+Persons.get(position).getFirst_name()+" "+Persons.get(position).getLast_name());
+                alert.setMessage(context.getResources().getString(R.string.delete_question));
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //DELETE PERSON FROM DATABASE
+                        DbPersonsHelper PersonsHelper = new DbPersonsHelper(context);
+                        PersonsHelper.delete(Persons.get(position).getFirst_name(), Persons.get(position).getLast_name());
+
+                        dialog.cancel();
+                    }
+                });
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alert.create();
+                alert.show();
+
             }
         });
 

@@ -1,9 +1,11 @@
 package com.victorvargascodetest;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,9 +28,24 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<ModelPersons> Persons = new ArrayList<ModelPersons>();
 
-        //TWO PERSONS ADDED AT FIRST FOR DEMO
-        Persons.add(new ModelPersons("Victor", "Vargas", "+56 9 7501 1700", "1982-10-15", "9876543"));
-        Persons.add(new ModelPersons("Frank", "Bermann", "+56 9 7685 9364", "1976-05-01", "9854320"));
+        //ADD PERSONS TO LIST IF EXIST ON DATABASE
+        DbPersonsHelper PersonsHelper = new DbPersonsHelper(this);
+        Cursor cursor = PersonsHelper.getAll();
+        if(cursor.getCount() > 0){
+            while(cursor.moveToNext()){
+                Persons.add(new ModelPersons(
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.FIRST_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.LAST_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.PHONE_NUMBER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.DATE_OF_BIRTH)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbPersonsDefinition.Entry.ZIPCODE))
+                ));
+            }
+        } else {
+
+        }
+        cursor.close();
+
 
         //LIST VIEW AND ADAPTER TO SHOW DATA
         ListView List = (ListView) findViewById(R.id.ListView);

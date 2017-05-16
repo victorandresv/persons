@@ -36,10 +36,16 @@ public class DbPersonsHelper  extends SQLiteOpenHelper {
         db.insert(DbPersonsDefinition.Entry.TABLE_NAME, null, values);
     }
 
-    public void update(Integer id, ContentValues values){
+    public void update(String first_name, String last_name, ContentValues values){
         SQLiteDatabase db = getReadableDatabase();
-        String where = DbPersonsDefinition.Entry.ID + " = "+ id;
-        db.update(DbPersonsDefinition.Entry.TABLE_NAME, values, where, null);
+        String where = DbPersonsDefinition.Entry.FIRST_NAME + " = ? AND "+ DbPersonsDefinition.Entry.LAST_NAME + " = ?";
+        db.update(DbPersonsDefinition.Entry.TABLE_NAME, values, where, new String[]{first_name, last_name});
+    }
+
+    public void delete(String first_name, String last_name){
+        SQLiteDatabase db = getReadableDatabase();
+        String where = DbPersonsDefinition.Entry.FIRST_NAME + " = ? AND "+ DbPersonsDefinition.Entry.LAST_NAME + " = ?";
+        db.delete(DbPersonsDefinition.Entry.TABLE_NAME, where, new String[]{first_name, last_name});
     }
 
     public Cursor getAll(){
